@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 int main(){
@@ -9,17 +10,12 @@ int main(){
         perror("Ошибка открытия");
         return 1;
     }
-    uint8_t size;
-    fread(&size, 1, 1, file);
-    //printf("%d", size);
-    char block[size];
-    for(uint8_t i = 0; i < size; i++){
-        block[i] = 0;
-    }
-    uint8_t size2;
-    while((size2 = fread(block, 1, size, file)) != 0){
-        
-    }
+    // узнаём размер блока и количество строк
+    uint8_t size_for_array = sizeof(uint8_t)+sizeof(uint32_t);
+    uint8_t *array = malloc(size_for_array);
+    fread(array, size_for_array, 1, file);
+    uint8_t size_of_block
+    printf("%d, %d", *array, (uint32_t)*(array+1));
     fclose(file);
     return 0;
 }

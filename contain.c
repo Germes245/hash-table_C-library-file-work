@@ -13,6 +13,5 @@ size_t contain(char array[], size_t bytes, char byte){
 int main(){
     char chars[] = {110, 97, 0};
     printf("%d\n", contain(chars, sizeof(chars), 0));
-    
     return 0;
 }
