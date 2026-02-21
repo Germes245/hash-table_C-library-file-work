@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define size_of_block 70
 
@@ -13,13 +14,12 @@ int main() {
         return 1;
     }
     {
-        uint8_t size_for_array = sizeof(uint8_t)+sizeof(uint32_t);
-        uint8_t *array = malloc(size_for_array);
-        *array = size_of_block;
-        uint32_t *size_t_pointer = array+1;
-        *size_t_pointer = sizeof(text)/sizeof(char*);
+        uint8_t size_for_array = sizeof(size_t)*2;
+        size_t *array = malloc(size_for_array);
+        array[0] = size_of_block; //в первые байты записываем размер блока
+        array[1] = sizeof(text)/sizeof(char*);
         fwrite(array, size_for_array, 1, file);
-        write(1, array, size_for_array);
+        //write(1, array, size_for_array);
     }
     char block[size_of_block] = {0};
     uint8_t current_size_of_strings = 0;
@@ -36,6 +36,7 @@ int main() {
         }
         current_size_of_strings += size;
     }
+    write(1, block, size_of_block);
     fwrite(block, sizeof(char), size_of_block, file);
     //printf("%d", current_size_of_strings);
     fclose(file);

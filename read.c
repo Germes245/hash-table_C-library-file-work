@@ -11,11 +11,19 @@ int main(){
         return 1;
     }
     // узнаём размер блока и количество строк
-    uint8_t size_for_array = sizeof(uint8_t)+sizeof(uint32_t);
-    uint8_t *array = malloc(size_for_array);
-    fread(array, size_for_array, 1, file);
-    uint8_t size_of_block
-    printf("%d, %d", *array, (uint32_t)*(array+1));
+    size_t size_of_block, score_of_strings;
+    {
+        size_t array[2];
+        fread(array, sizeof(size_t), 2, file);
+        size_of_block = array[0];
+        score_of_strings = array[1];
+    }
+    char *text[score_of_strings];
+    char block[size_of_block];
+    register size_t i = 0;
+    while(fread(block, sizeof(char), size_of_block, file) != 0){
+        
+    }
     fclose(file);
     return 0;
 }
