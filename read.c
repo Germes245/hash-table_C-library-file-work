@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 typedef struct{
-    size_t* array_of_lengths;// длина включай нулевой терминатор
+    size_t* array_of_lengths;// длина включая нулевой терминатор
     size_t* array_of_indexes;
     size_t length;
 } array_;
@@ -25,8 +25,41 @@ array_ length_of_strings(char array[], size_t length, size_t score){ // 1. бл�
     return result;
 }
 
+typedef struct{
+    char **text;
+    size_t length;
+} char_pointer_array;
+
+char_pointer_array read_strings_from_file(char* name_of_file){
+    FILE *file = fopen(name_of_file, "rb");
+    if (file == NULL) {
+        perror("Ошибка открытия");
+        exit(1);
+    }
+    char_pointer_array strings;
+    size_t size_of_block;
+    {
+        size_t array[2];
+        fread(array, sizeof(size_t), 2, file);
+        size_of_block = array[0];
+        strings.length = array[1];
+    }
+    strings.text = malloc(strings.length*sizeof(char*));
+    char block[size_of_block];
+    register size_t i = 0;
+    while(fread(block, sizeof(char), size_of_block, file) != 0){
+        array_ result = length_of_strings(block, size_of_block, strings.length);
+        for(size_t i = 0; i < result.length; i++){
+            strings.text[i] = malloc(result.array_of_lengths[i]);
+            memcpy(strings.text[i], block + result.array_of_indexes[i], result.array_of_lengths[i]);
+        }
+    }
+    fclose(file);
+    return strings;
+}
+
 int main(){
-    FILE *file = fopen("test.bin", "rb");
+    /*FILE *file = fopen("test.bin", "rb");
     if (file == NULL) {
         perror("Ошибка открытия");
         return 1;
@@ -44,17 +77,17 @@ int main(){
     register size_t i = 0;
     while(fread(block, sizeof(char), size_of_block, file) != 0){
         array_ result = length_of_strings(block, size_of_block, score_of_strings);
-        //printf("lengths: ");
-        //for(size_t i = 0; i < result.length; i++)
-        //    printf("%d ", result.array_of_lengths[i]);
-        //putchar('\n');
-        //printf("indexes: ");
-        //printf("result.length = %d\n", result.length);
         for(size_t i = 0; i < result.length; i++){
             //printf("index: %d\n", result.array_of_indexes[i]);
-            write(1, block + result.array_of_indexes[i], result.array_of_lengths[i]);
+            //write(1, block + result.array_of_indexes[i], result.array_of_lengths[i]);
+            text[i] = malloc(result.array_of_lengths[i]);
+            memcpy(text[i], block + result.array_of_indexes[i], result.array_of_lengths[i]);
         }
+    }*/
+    char_pointer_array text = read_strings_from_file("test.bin");
+    for(size_t i = 0; i < text.length; i++){
+        printf("%s\n", text.text[i]);
     }
-    fclose(file);
+    //fclose(file);
     return 0;
 }
