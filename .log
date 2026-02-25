@@ -1,0 +1,11 @@
+admin@admin-81yh:~/Desktop/ispytanija/C/math/hash-table_C-library-file-work$ gp
+Enumerating objects: 9, done.
+Counting objects: 100% (9/9), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (5/5), 863 bytes | 863.00 KiB/s, done.
+Total 5 (delta 3), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
+To github.com:Germes245/hash-table_C-library-file-work.git
+   cc95108..2528597  main -> main
+branch 'main' set up to track 'origin/main'.
