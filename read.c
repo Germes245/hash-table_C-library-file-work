@@ -37,10 +37,10 @@ char_pointer_array read_strings_from_file(char* name_of_file){
         exit(1);
     }
     char_pointer_array strings;
-    size_t size_of_block;
+    uint32_t size_of_block;
     {
-        size_t array[2];
-        fread(array, sizeof(size_t), 2, file);
+        uint32_t array[2];
+        fread(array, sizeof(uint32_t), 2, file);
         size_of_block = array[0];
         strings.length = array[1];
     }
@@ -59,35 +59,9 @@ char_pointer_array read_strings_from_file(char* name_of_file){
 }
 
 int main(){
-    /*FILE *file = fopen("test.bin", "rb");
-    if (file == NULL) {
-        perror("Ошибка открытия");
-        return 1;
-    }
-    // узнаём размер блока и количество строк
-    size_t size_of_block, score_of_strings;
-    {
-        size_t array[2];
-        fread(array, sizeof(size_t), 2, file);
-        size_of_block = array[0];
-        score_of_strings = array[1];
-    }
-    char *text[score_of_strings];
-    char block[size_of_block];
-    register size_t i = 0;
-    while(fread(block, sizeof(char), size_of_block, file) != 0){
-        array_ result = length_of_strings(block, size_of_block, score_of_strings);
-        for(size_t i = 0; i < result.length; i++){
-            //printf("index: %d\n", result.array_of_indexes[i]);
-            //write(1, block + result.array_of_indexes[i], result.array_of_lengths[i]);
-            text[i] = malloc(result.array_of_lengths[i]);
-            memcpy(text[i], block + result.array_of_indexes[i], result.array_of_lengths[i]);
-        }
-    }*/
     char_pointer_array text = read_strings_from_file("test.bin");
     for(size_t i = 0; i < text.length; i++){
         printf("%s\n", text.text[i]);
     }
-    //fclose(file);
     return 0;
 }
