@@ -1,4 +1,0 @@
-#!/bin/bash
-# (git save)
-git add .
-git commit -m "$*"

@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
@@ -12,16 +13,20 @@ typedef struct{
 
 array_ length_of_strings(char array[], size_t length, size_t score){ // 1. блок 2. размер блока 3. количество строк
     array_ result;
-    result.array_of_lengths = malloc(score*sizeof(size_t));
-    result.array_of_indexes = malloc(score*sizeof(size_t));
-    result.length = score;
-    for(size_t i = 0, j = 0; i < length; j++){
-        size_t length = strlen(array+i)+1;
-        if(array[i] == 0) break;
-        result.array_of_lengths[j] = length;
-        result.array_of_indexes[j] = i;
-        i += length;
+    result.length = 0;
+    //write(1, array, length);
+    for(size_t i = 0; i < length; i++){
+        if(array[i] == 0){
+            printf("%d\n", i);
+            result.length++;
+        }
+        //if(i + 1 == length) break;
+        //if(array[i + 1] == 0) break;
+        //putchar(array[i]);
     }
+    //write(1, array, length);
+    printf("%d", result.length);
+    exit(1);
     return result;
 }
 
@@ -49,11 +54,11 @@ char_pointer_array read_strings_from_file(char* name_of_file){
     register size_t i = 0;
     while(fread(block, sizeof(char), size_of_block, file) != 0){
         array_ result = length_of_strings(block, size_of_block, strings.length);
-        for(size_t i = 0; i < result.length; i++){
-            strings.text[i] = malloc(result.array_of_lengths[i]);
-            memcpy(strings.text[i], block + result.array_of_indexes[i], result.array_of_lengths[i]);
-        }
+        //write(1, block, size_of_block);
+        printf("%d", result.length);
+        exit(1);
     }
+    printf("%d\n", strings.length);
     fclose(file);
     return strings;
 }
