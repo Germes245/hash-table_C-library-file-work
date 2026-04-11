@@ -6,53 +6,19 @@
 #include <unistd.h>
 
 typedef struct{
-    uint32_t* array_of_lengths;// длина включая нулевой терминатор
-    uint32_t* array_of_indexes;
-    uint32_t length;
-} array_;
-
-array_ length_of_strings(char array[], uint32_t length){ // 1. блок 2. размер блока 3. количество строк
-    array_ result;
-    result.length = 0;
-    //write(1, array, length);
-    for(uint32_t i = 0; i < length; i++){
-        if(array[i] == 0){
-            //printf("%d\n", i);
-            result.length++;
-            if((i + 1 == length) || (array[i + 1] == 0)){
-                //printf("%d\n", i);
-                break;
-            }
-        }
-        //printf("%d, %d\n", array[i], array[i+1]);
-    }
-    //printf("%d\n", result.length);
-    //exit(1);
-    result.array_of_indexes = malloc(result.length * sizeof(uint32_t));
-    result.array_of_lengths = malloc(result.length * sizeof(uint32_t));
-    for(uint32_t index = 0, j = 0, length = 0; j < result.length; index++){
-        if(array[index] == 0){
-            result.array_of_indexes[j] = index;
-            j++;
-            result.array_of_indexes[j] = length;
-            length = 0;
-        }
-        if(index + 1 == length && array[index + 1] == 0){
-            break;
-        }
-        length++;
-    }
-    //write(1, result.array_of_indexes, result.length * sizeof(uint32_t));
-    //for(int i = 0; i < result.length; i++) printf("%d ", result.array_of_indexes[i]);
-    //write(1, array, length);
-    //printf("%d", result.length);
-    return result;
-}
-
-typedef struct{
     char **text;
     size_t length;
 } char_pointer_array;
+
+size_t get_score_of_null_symbols(char buffer[], size_t length){
+    size_t score_of_null_symbols = 0;
+    for(size_t i = 0; i < sizeof(buffer); i++){
+        if (buffer[i] == 0) {
+            score_of_null_symbols++;
+        }
+    }
+    return score_of_null_symbols;
+}
 
 char_pointer_array read_strings_from_file(char* name_of_file){
     FILE *file = fopen(name_of_file, "rb");
@@ -60,39 +26,48 @@ char_pointer_array read_strings_from_file(char* name_of_file){
         perror("Ошибка открытия");
         exit(1);
     }
+    char buffer[60];
+    fread(buffer, 1, sizeof(buffer), file);
+    //write(1, buffer, sizeof(buffer));
+    size_t score_of_null_symbols = 0;
+    for(size_t i = 0; i < sizeof(buffer); i++){
+        if (buffer[i] == 0) {
+            score_of_null_symbols++;
+        }
+    }
     char_pointer_array strings;
-    uint32_t size_of_block;
-    {
-        uint32_t array[2];
-        fread(array, sizeof(uint32_t), 2, file);
-        size_of_block = array[0];
-        strings.length = array[1];
+    //strings.length=score_of_null_symbols + 1;
+    //strings.text = malloc(sizeof(char*) * (strings.length));
+    size_t array_of_indexes[score_of_null_symbols];
+
+    for (size_t i = 0, j = 0; i < sizeof(buffer); i++) {
+        if (buffer[i] == 0) {
+            array_of_indexes[j] = i;
+            j++;
+        }
     }
-    strings.text = malloc(strings.length*sizeof(char*));
-    char block[size_of_block];
-    register size_t i = 0;
-    while(fread(block, sizeof(char), size_of_block, file) != 0){
-        array_ result = length_of_strings(block, size_of_block);
-        //write(1, block, size_of_block);
-        //printf("длина массива: %d\n", result.length);
-        //("индексы: ");
-        for(int i = 0; i < result.length; i++) printf("%d ", result.array_of_indexes[i]);
-        putchar('\n');
-        //printf("длины: ");
-        //for(int i = 0; i < result.length; i++) printf("%d ", result.array_of_lengths[i]);
-        //for(int i = 0; i < result.length; i++) printf("%s\n", block + result.array_of_indexes[i]);
-        //putchar('\n');
-        //exit(1);
+    for (size_t i = 0; i < score_of_null_symbols; i++) {
+        printf("%d ", array_of_indexes[i]);
     }
-    //printf("%d\n", strings.length);
+    putchar('\n');
+    printf("memcpy: %d, %d\n", 0, array_of_indexes[1]);
+
+    for (size_t i = 1; i < score_of_null_symbols; i++) {
+        printf("memcpy: %d, %d\n", array_of_indexes[i-1], array_of_indexes[i]);
+    }
+    printf("memcpy: %d, %d\n", array_of_indexes[score_of_null_symbols-1], sizeof(buffer));
+    putchar('\n');
+
+    printf("%d\n", score_of_null_symbols);
+    strings.length = score_of_null_symbols + 1;
+    strings.text = malloc(sizeof(char*) * (strings.length));
+    //memcpy(void *, const void *, __size_t)
+    //strings.text[0]
     fclose(file);
-    return strings;
+    exit(1);
 }
 
 int main(){
     char_pointer_array text = read_strings_from_file("test.bin");
-    /*for(size_t i = 0; i < text.length; i++){
-        printf("%s\n", text.text[i]);
-    }*/
     return 0;
 }
