@@ -19,7 +19,7 @@ void write_strings_into_file(char* name_of_file, char *text[], size_t number_of_
 }
 
 int main() {
-    char *text[] = {"om mani padme hum", "om namah shivaya namah shivaya hara hara bole namah shivaya"};
+    char *text[] = {"om mani padme hum", "om namah shivaya namah shivaya hara hara bole namah shivaya", "om mani padme hum", "om namah shivaya namah shivaya hara hara bole namah shivaya"};
     write_strings_into_file("test.bin", text, sizeof(text)/sizeof(char*));
     return 0;
 }
