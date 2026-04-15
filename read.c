@@ -36,10 +36,7 @@ char_pointer_array read_buffer(char buffer[], size_t length){
         }
     }
 
-    //strings.length = score_of_null_symbols + 1 + (buffer[length-1] ? 1 : 0);
-
     strings.length = score_of_null_symbols;
-    //printf("%d\n", buffer[length-1]);
     if(buffer[length-1]){
         strings.length++;
         strings.text = malloc(strings.length * sizeof(char*));
@@ -49,21 +46,14 @@ char_pointer_array read_buffer(char buffer[], size_t length){
         strings.text = malloc(strings.length * sizeof(char*));
     }
 
-    //int fd = open("a.log", O_CREAT | O_WRONLY, S_IWUSR | S_IRUSR);
-
     strings.text[0] = malloc(array_of_indexes[1]);
     memcpy(strings.text[0], buffer, array_of_indexes[1]);
-    //write(fd, buffer, array_of_indexes[1]);
-    //write(fd, "\n", 1);
 
     for (size_t i = 1; i < score_of_null_symbols; i++) {
         size_t length = array_of_indexes[i] - array_of_indexes[i-1];
         strings.text[i] = malloc(length);
         memcpy(strings.text[i], buffer + array_of_indexes[i-1] + 1, length);
-        //write(fd, buffer + array_of_indexes[i-1] + 1, length);
-        //write(fd, "\n", 1);
     }
-    //close(fd);
 
     return strings;
 }
@@ -80,11 +70,21 @@ char_pointer_array read_strings_from_file(char* name_of_file){
 
     char_pointer_array array_of_strings = read_buffer(buffer, length);
 
-    counto(i, array_of_strings.length){
-        printf("%d %s\n", array_of_strings.text[i], array_of_strings.text[i]);
+    /*counto(i, array_of_strings.length){
+        printf("%s\n", array_of_strings.text[i]);
+    }*/
+
+    //length = fread(buffer, 1, sizeof(buffer), file);
+
+    //char_pointer_array array_of_strings2 = read_buffer(buffer, length);
+    //printf("shya %d\n", array_of_strings.text[array_of_strings.length-1]);
+    if(array_of_strings.text[array_of_strings.length-1]){
+        printf("строки полные. последняя строка: %s\n", array_of_strings.text[array_of_strings.length-1]);
+    }
+    else {
+        printf("есть неполная строка: %s\n", array_of_strings.text[array_of_strings.length-2]);
     }
 
-    //printf("%d\n", score_of_null_symbols);
     fclose(file);
     exit(1);
 }
