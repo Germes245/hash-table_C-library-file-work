@@ -126,12 +126,14 @@ char_pointer_array read_strings_from_file(char* name_of_file){
         }
         putchar('\n');
         size_t index = array_of_strings.length-1;
-        array_of_strings.length += array_of_strings2.length;
+        printf("длина первого: %d, длина второго: %d\n", array_of_strings.length, array_of_strings2.length);
+        array_of_strings.length += array_of_strings2.length - 1;
         array_of_strings.text = realloc(array_of_strings.text, array_of_strings.length * sizeof(char*));
         for(size_t j = 0; index < array_of_strings.length; index++){
             array_of_strings.text[index] = array_of_strings2.text[j];
             j++;
         }
+        printf("новая длина: %d\n", array_of_strings.length);
         counto(i, array_of_strings.length){
             printf("%s\n", array_of_strings.text[i]);
         }
