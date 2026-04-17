@@ -96,23 +96,47 @@ char_pointer_array read_strings_from_file(char* name_of_file){
     }
     char buffer[0x31];
     size_t length = fread(buffer, 1, sizeof(buffer), file);
-
     char_pointer_array array_of_strings = read_buffer(buffer, length);
+    /*counto(i, array_of_strings.length){
+        printf("%s\n", array_of_strings.text[i]);
+    }
+    putchar('\n');*/
+    length = fread(buffer, 1, sizeof(buffer), file);
+    char_pointer_array array_of_strings2 = read_buffer(buffer, length);
+    if(array_of_strings.text[array_of_strings.length-1]){
+        size_t index = array_of_strings.length;
+        array_of_strings.length += array_of_strings2.length;
+        array_of_strings.text = realloc(array_of_strings.text, array_of_strings.length);
+        memcpy(array_of_strings.text + index * sizeof(char*), array_of_strings2.text, array_of_strings2.length * sizeof(char*));
+        counto(i, array_of_strings.length){
+            printf("%s\n", array_of_strings.text[i]);
+        }
+    }
+    /*counto(i, array_of_strings2.length){
+        printf("%s\n", array_of_strings2.text[i]);
+    }*/
+    /*putchar('\n');
+    counto(i, array_of_strings.length){
+        printf("%s\n", array_of_strings.text[i]);
+    }*/
+    //write(1, buffer, length);
 
+    /*if(array_of_strings.text[array_of_strings.length-1]){
+        printf("\nстроки полные. последняя строка: %s\n", array_of_strings.text[array_of_strings.length-1]);
+    }
+    else {
+        printf("\nесть неполная строка: %s\n", array_of_strings.text[array_of_strings.length-2]);
+    }*/
     /*counto(i, array_of_strings.length){
         printf("%s\n", array_of_strings.text[i]);
     }*/
-
     //length = fread(buffer, 1, sizeof(buffer), file);
-
     //char_pointer_array array_of_strings2 = read_buffer(buffer, length);
-    //printf("shya %d\n", array_of_strings.text[array_of_strings.length-1]);
-    if(array_of_strings.text[array_of_strings.length-1]){
-        printf("строки полные. последняя строка: %s\n", array_of_strings.text[array_of_strings.length-1]);
-    }
-    else {
-        printf("есть неполная строка: %s\n", array_of_strings.text[array_of_strings.length-2]);
-    }
+
+    /*putchar('\n');
+    counto(i, array_of_strings2.length){
+        printf("%s\n", array_of_strings.text[i]);
+    }*/
 
     fclose(file);
     exit(1);
