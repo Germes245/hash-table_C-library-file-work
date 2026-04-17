@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
 
 typedef struct{
     char **text;
@@ -55,11 +56,9 @@ char_pointer_array read_buffer(char buffer[], size_t length){
         strings.text[0] = malloc(length_of_array);
         memcpy(strings.text[0], buffer, length_of_array);
 
+        size_t i = 1;
         if(strings.length > 2){
-            for(size_t i = 1; i < strings.length - 1; i++){
-                /*length_of_array = array_of_indexes[i]+1;
-                strings.text[i] = malloc(length_of_array);
-                memcpy(strings.text[i], buffer, length_of_array);*/
+            for(; i < strings.length - 1; i++){
                 printf("(%ld, %ld)\n", array_of_indexes[i-1]+1, array_of_indexes[i]);
                 length_of_array = array_of_indexes[i] - array_of_indexes[i-1];
                 printf("length_of_array: %ld\n", length_of_array);
@@ -70,12 +69,15 @@ char_pointer_array read_buffer(char buffer[], size_t length){
 
         // копирование последней строки
         printf("(%ld, %ld)\n", array_of_indexes[score_of_null_symbols-1]+1, length-1);
-        length_of_array = length - array_of_indexes[score_of_null_symbols-1];
+        length_of_array = (length-1) - (array_of_indexes[score_of_null_symbols-1]+1);
+        printf("length of array: %d\n", length_of_array);
         strings.text[strings.length-1] = malloc(length_of_array);
-        printf("farthest border: %d\n", array_of_indexes[score_of_null_symbols-1]+1+length_of_array);
-        memcpy(strings.text[strings.length-1], buffer + array_of_indexes[score_of_null_symbols-1]+1, length_of_array);
+        //printf("farthest border: %d\n", array_of_indexes[score_of_null_symbols-1]+1+length_of_array);
+        //write(1, buffer + array_of_indexes[score_of_null_symbols-1]+1, length_of_array);
+        memcpy(strings.text[i], buffer + array_of_indexes[score_of_null_symbols-1]+1, length_of_array);
+        strings.text[i][length_of_array]=0;
     
-        printf("strings:\n");
+        printf("\nstrings:\n");
         counto(i, strings.length){
             printf("index %ld, and string %s\n", i, strings.text[i]);
         }
@@ -110,7 +112,7 @@ char_pointer_array read_buffer(char buffer[], size_t length){
 int main(){
     char buffer[] = "ass\0sanga\0tampoi";
     //putchar(buffer[9]);
-    char_pointer_array result = read_buffer(buffer, sizeof(buffer)-2);
+    char_pointer_array result = read_buffer(buffer, sizeof(buffer)-1);
 
     counto(i, result.length){
         printf("%s\n", result.text[i]);
