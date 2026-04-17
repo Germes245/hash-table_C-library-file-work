@@ -107,12 +107,27 @@ char_pointer_array read_strings_from_file(char* name_of_file){
         size_t index = array_of_strings.length;
         array_of_strings.length += array_of_strings2.length;
         array_of_strings.text = realloc(array_of_strings.text, array_of_strings.length * sizeof(char*));
-        //printf("%d\n", index);
-        //memcpy(array_of_strings.text + index * sizeof(char*), array_of_strings2.text, array_of_strings2.length * sizeof(char*));
         counto(i, array_of_strings.length){
             printf("%d\n", array_of_strings.text[i]);
         }
         putchar('\n');
+        for(size_t j = 0; index < array_of_strings.length; index++){
+            array_of_strings.text[index] = array_of_strings2.text[j];
+            j++;
+        }
+        counto(i, array_of_strings.length){
+            printf("%s\n", array_of_strings.text[i]);
+        }
+    }
+    else {
+        printf("strings:\n");
+        counto(i, array_of_strings2.length){
+            printf("%s\n", array_of_strings2.text[i]);
+        }
+        putchar('\n');
+        size_t index = array_of_strings.length-1;
+        array_of_strings.length += array_of_strings2.length;
+        array_of_strings.text = realloc(array_of_strings.text, array_of_strings.length * sizeof(char*));
         for(size_t j = 0; index < array_of_strings.length; index++){
             array_of_strings.text[index] = array_of_strings2.text[j];
             j++;
