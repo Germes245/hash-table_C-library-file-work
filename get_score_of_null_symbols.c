@@ -35,7 +35,7 @@ char_pointer_array read_buffer(char buffer[], size_t length){
     // 1
     char_pointer_array strings;
     size_t score_of_null_symbols = get_score_of_null_symbols(buffer, length); // количество NULL символов
-    //printf("score_of_null_symbols: %d\n", score_of_null_symbols);
+
     size_t array_of_indexes[score_of_null_symbols];
     get_indexes(array_of_indexes, buffer, length);
     printf("indexes of null symbols: ");
@@ -45,36 +45,22 @@ char_pointer_array read_buffer(char buffer[], size_t length){
     putchar('\n');
 
     // 2
-    //printf("shya\n");
-    //putchar(buffer[length-1]);
-    //putchar('\n');
     if(buffer[length-1]){
-        //printf("length: %d\n", strings.length);
         strings.length = score_of_null_symbols + 1;
         strings.text = malloc(strings.length * sizeof(char*));
 
-        // индексы границ у строк, которые будут скопированы в массив указателей
+        // копирование первой строки
         printf("(0, %ld)\n", array_of_indexes[0]);
         size_t length_of_array = array_of_indexes[0]+1;
-        //printf("%ld\n", length_of_array);
         strings.text[0] = malloc(length_of_array);
-
-        //printf("%ld %ld\n", length_of_array, strings.text);
         memcpy(strings.text[0], buffer, length_of_array);
-        //printf("%s\n", strings.text[0]);
 
-        //printf("%s\n", buffer);
-        /*printf("strings:\n");
-        counto(i, strings.length){
-            printf("index %ld, and string %s\n", i, strings.text[i]);
-        }*/
-
+        // копирование последней строки
         printf("(%ld, %ld)\n", array_of_indexes[score_of_null_symbols-1]+1, length-1);
-        length_of_array = length - 1 - array_of_indexes[score_of_null_symbols-1];
+        length_of_array = length - array_of_indexes[score_of_null_symbols-1];
         strings.text[strings.length-1] = malloc(length_of_array);
-        //putchar(*(buffer + array_of_indexes[score_of_null_symbols-1]+1));
         memcpy(strings.text[strings.length-1], buffer + array_of_indexes[score_of_null_symbols-1]+1, length_of_array);
-        //printf("strings %d:\n", strings.length-1);
+    
         printf("strings:\n");
         counto(i, strings.length){
             printf("index %ld, and string %s\n", i, strings.text[i]);
