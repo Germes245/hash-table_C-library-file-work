@@ -23,38 +23,67 @@ size_t get_score_of_null_symbols(char buffer[], size_t length){
     return score_of_null_symbols;
 }
 
-char_pointer_array read_buffer(char buffer[], size_t length){
-    size_t score_of_null_symbols = get_score_of_null_symbols(buffer, length); // количество NULL символов
-    char_pointer_array strings;
-
-    size_t array_of_indexes[score_of_null_symbols];
+void get_indexes(size_t indexes[], char buffer[], size_t length){
     for (size_t i = 0, j = 0; i < length; i++) {
         if (buffer[i] == 0) {
             // нахождение индексов NULL символов
-            array_of_indexes[j] = i;
+            indexes[j] = i;
             j++;
         }
     }
+}
 
-    strings.length = score_of_null_symbols;
+char_pointer_array read_buffer(char buffer[], size_t length){
+    // 1
+    char_pointer_array strings;
+    size_t score_of_null_symbols = get_score_of_null_symbols(buffer, length); // количество NULL символов
+
+    size_t array_of_indexes[score_of_null_symbols];
+    get_indexes(array_of_indexes, buffer, length);
+
+    // 2
     if(buffer[length-1]){
+        strings.length = score_of_null_symbols + 1;
+        strings.text = malloc((strings.length + 1) * sizeof(char*));
+        strings.text[strings.length] = 0;
+
+        // копирование первой строки
+        size_t length_of_array = array_of_indexes[0]+1;
+        strings.text[0] = malloc(length_of_array);
+        memcpy(strings.text[0], buffer, length_of_array);
+
+        size_t i = 1;
+        if(strings.length > 2){
+            for(; i < strings.length - 1; i++){
+                length_of_array = array_of_indexes[i] - array_of_indexes[i-1];
+                strings.text[i] = malloc(length_of_array);
+                memcpy(strings.text[i], buffer + array_of_indexes[i-1] + 1, length_of_array);
+            }
+        }
+
+        // копирование последней строки
+        length_of_array = (length-1) - (array_of_indexes[score_of_null_symbols-1]+1);
+        strings.text[i] = malloc(length_of_array);
+        memcpy(strings.text[i], buffer + array_of_indexes[score_of_null_symbols-1]+1, length_of_array);
+        strings.text[i][length_of_array]=0;
+
         strings.length++;
-        strings.text = malloc(strings.length * sizeof(char*));
-        strings.text[strings.length - 1] = 0;
     }
     else {
+        // "первый случай"
+        strings.length = score_of_null_symbols;
         strings.text = malloc(strings.length * sizeof(char*));
+
+        // индексы границ у строк, которые будут скопированы в массив указателей
+        size_t length = array_of_indexes[0]+1;
+        strings.text[0] = malloc(length);
+        memcpy(strings.text[0], buffer, length);
+        counto(i, strings.length-1){
+            length = array_of_indexes[i+1] - array_of_indexes[i]+1;
+            strings.text[i+1] = malloc(length);
+            memcpy(strings.text[i+1], buffer + array_of_indexes[i]+1, length);
+        }
     }
-
-    strings.text[0] = malloc(array_of_indexes[1]);
-    memcpy(strings.text[0], buffer, array_of_indexes[1]);
-
-    for (size_t i = 1; i < score_of_null_symbols; i++) {
-        size_t length = array_of_indexes[i] - array_of_indexes[i-1];
-        strings.text[i] = malloc(length);
-        memcpy(strings.text[i], buffer + array_of_indexes[i-1] + 1, length);
-    }
-
     return strings;
 }
 

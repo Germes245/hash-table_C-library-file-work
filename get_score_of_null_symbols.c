@@ -40,7 +40,6 @@ char_pointer_array read_buffer(char buffer[], size_t length){
     get_indexes(array_of_indexes, buffer, length);
 
     // 2
-    //printf("shya\n");
     if(buffer[length-1]){
         strings.length = score_of_null_symbols + 1;
         strings.text = malloc((strings.length + 1) * sizeof(char*));
@@ -62,16 +61,11 @@ char_pointer_array read_buffer(char buffer[], size_t length){
 
         // копирование последней строки
         length_of_array = (length-1) - (array_of_indexes[score_of_null_symbols-1]+1);
-        strings.text[strings.length-1] = malloc(length_of_array);
+        strings.text[i] = malloc(length_of_array);
         memcpy(strings.text[i], buffer + array_of_indexes[score_of_null_symbols-1]+1, length_of_array);
         strings.text[i][length_of_array]=0;
-    
-        /*printf("\nstrings:\n");
-        counto(i, strings.length){
-            printf("index %ld, and string %s\n", i, strings.text[i]);
-        }*/
+
         strings.length++;
-        //printf("%d\n", strings.length);
     }
     else {
         // "первый случай"
@@ -93,7 +87,6 @@ char_pointer_array read_buffer(char buffer[], size_t length){
 
 int main(){
     char buffer[] = "ass\0sanga\0tampoi";
-    //putchar(buffer[9]);
     char_pointer_array result = read_buffer(buffer, sizeof(buffer)-1);
 
     counto(i, result.length){
