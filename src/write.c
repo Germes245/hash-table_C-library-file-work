@@ -17,9 +17,3 @@ void write_strings_into_file(char* name_of_file, char *text[], size_t number_of_
         fwrite(text[i], 1, strlen(text[i])+1, file);
     fclose(file);
 }
-
-int main() {
-    char *text[] = {"om mani padme hum", "om namah shivaya namah shivaya hara hara bole namah shivaya", "om mani padme hum", "om namah shivaya namah shivaya hara hara bole namah shivaya"};
-    write_strings_into_file("test.bin", text, sizeof(text)/sizeof(char*));
-    return 0;
-}

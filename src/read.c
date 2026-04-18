@@ -108,20 +108,3 @@ StringArray read_null_separated_file(const char *filename) {
     result.count = count;   // count должно быть равно str_idx
     return result;
 }
-
-int main() {
-    StringArray arr = read_null_separated_file("test.bin");
-    if (arr.strings == NULL) {
-        printf("Ошибка чтения файла или файл пуст.\n");
-        return 1;
-    }
-
-    printf("Найдено строк: %zu\n", arr.count);
-    for (size_t i = 0; i < arr.count; ++i) {
-        printf("[%zu]: \"%s\"\n", i, arr.strings[i]);
-        free(arr.strings[i]);   // освобождаем каждую строку
-    }
-    free(arr.strings);          // освобождаем массив указателей
-
-    return 0;
-}
